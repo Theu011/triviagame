@@ -105,7 +105,11 @@ def create_app(test_config=None):
     difficulty = request.get_json()['difficulty']
     
     try:
-      question_item = Question(question=question, answer=answer, category=category, difficulty=difficulty)
+      question_item = Question(
+        question=question,
+        answer=answer,
+        category=category,
+        difficulty=difficulty)
       question_item.insert()
 
       return jsonify({
@@ -207,6 +211,22 @@ def create_app(test_config=None):
       'error': 422,
       'message': 'Unprocessable'
     }), 422
+
+  @app.errorhandler(400)
+  def bad_request(error):
+    return jsonify({
+      'success': False,
+      'error': 400,
+      'message': 'Bad Request'
+    }), 400
+  
+  @app.errorhandler(500)
+  def internal_server(error):
+    return jsonify({
+      'success': False,
+      'error': 500,
+      'message': 'Internal Server Error'
+    })
   
   return app
 
